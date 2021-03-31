@@ -43,7 +43,7 @@ public abstract class Arc {
      *         kilometers-per-hour).
      */
     public double getTravelTime(double speed) {
-        return getLength() * 3600.0 / (speed * 1000.0);
+        return this.getLength() * 3600.0 / (speed * 1000.0);
     }
 
     /**
