@@ -33,7 +33,6 @@ public class Path {
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
      * 
-     * @deprecated Need to be implemented.
      */
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
@@ -71,10 +70,15 @@ public class Path {
         			}
         			
         		}
-        		//FAIRE LE ADD ICI
-        		arcs.add(plus_rapide);
-        		emetteur = recepteur;
-        		premier = true; 		
+        		//Si on renvoie une valeur qui est nulle alors on a une exception
+        		if (plus_rapide == null) {
+        			throw new IllegalArgumentException();
+        		}
+        		else {
+        			arcs.add(plus_rapide);
+            		emetteur = recepteur;
+            		premier = true; 
+        		}  				
         	}
         }
         return new Path(graph, arcs);
@@ -96,8 +100,51 @@ public class Path {
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
-        List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
+    	List<Arc> arcs = new ArrayList<Arc>();
+        boolean premier = true;
+        Arc plus_court = null;
+        
+        if(nodes.size() == 0) {
+        	return new Path(graph);
+        }
+        else if(nodes.size() == 1) {
+        	return new Path(graph,nodes.get(0));
+        }
+        else {
+        	//On va itérer sur le contenu de nodes pour pouvoir construire le chemin le plus rapide
+        	Iterator<Node> itnodes = nodes.iterator();
+        	Node emetteur = itnodes.next();
+        	
+        	while(itnodes.hasNext()) {
+        		Node recepteur = itnodes.next();
+        		//on parcours l'ensemble des arcs dont l'emetteur est originaire.
+        		Iterator<Arc> itarc = emetteur.getSuccessors().iterator();
+        		
+        		while(itarc.hasNext()) {
+        			Arc arc_actuel = itarc.next();
+        			if(arc_actuel.getDestination().equals(recepteur)) {
+        				//on vérifie si c'est le premier arc pris
+        				if(premier) {
+        					plus_court = arc_actuel;
+        					premier = false;
+        				}
+        				else if(plus_court.getLength()>arc_actuel.getLength()) {
+        					plus_court = arc_actuel;
+        				}
+        			}
+        			
+        		}
+        		//Si on renvoie une valeur qui est nulle alors on a une exception
+        		if (plus_court == null) {
+        			throw new IllegalArgumentException();
+        		}
+        		else {
+        			arcs.add(plus_court);
+            		emetteur = recepteur;
+            		premier = true; 
+        		}  				
+        	}
+        }
         return new Path(graph, arcs);
     }
 
