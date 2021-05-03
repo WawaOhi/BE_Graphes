@@ -1,7 +1,9 @@
 package org.insa.graphs.algorithm.shortestpath;
+
 import org.insa.graphs.model.Node;
 
-public class Label {
+
+public class Label implements Comparable<Label> {
 	public Node sommet_courant;
 	public boolean marque; 
 	public float cout;
@@ -58,6 +60,26 @@ public class Label {
 	
 	public void setState() {
 		this.dans_tas=true;
+	}
+
+	//méthode necesaire à a creation de BinaryHeap contenant des labels.
+	
+	@Override
+	public int compareTo(Label autre) {
+		// TODO Auto-generated method stub
+		int resultat;
+		if(this.getCost()<autre.getCost()) {
+			resultat = -1;
+		}
+		
+		else if (this.getCost() == autre.getCost()) {
+			resultat = 0;
+		}
+		
+		else {
+			resultat = 1;
+		}
+		return resultat;
 	}
 		
 }
