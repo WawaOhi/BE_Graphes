@@ -49,11 +49,17 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         premier.setState(); //permet de noter le label comme étant dans le tas 
         premier.setCost(0); //on met le prix initialement à 0
         
+        //On notifie que le premier élement à été introduit 
+        notifyOriginProcessed(data.getOrigin());
+        
         //tant que nous avons des sommets qui ne sont pas marqués on avance
         while(!tas.isEmpty() && !fin) {
         	Label actuel = null;
         	actuel = tas.deleteMin();
         	actuel.setMark();
+        	
+        	//On notifie que le noeud que nous considérons à été marqué 
+        	notifyNodeMarked(actuel.getNode());
         	
         	//on vérifie si on n'est pas arrivé à la fin 
         	if(actuel.getNode() == data.getDestination()) {
@@ -78,12 +84,14 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         		
         		//si le label n'existe pas alors nous devons le créer
         		if(Success_Lab == null) {
+        			//on notifie que l'on viens d'arriver à un noeud qui n'avais pas été marqué 
+        			notifyNodeReached(iterArc.getDestination());
         			Success_Lab = new Label (successeur);
         			tabLabel[Success_Lab.getNode().getId()] = Success_Lab;
         			this.nbSommetsVus++;
         		}
         		
-        		//On vérifie que c'est bien marqué en balle 
+        		//On vérifie que c'est bien marqué 
         		if(!Success_Lab.getMark()) {
         			//On vérifie la valeur du cout pour voir si il est meilleur ou non
         			if(Success_Lab.getCost()>(actuel.getCost()+data.getCost(iterArc))) {
@@ -113,6 +121,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	solution = new ShortestPathSolution(data,Status.INFEASIBLE);
         }
         else {
+        	
+        	//on notifie que la déstination à été atteinte
+        	notifyDestinationReached(data.getDestination());
+        	
         	//on va créer un chemin des points que nous avons créé
         	ArrayList<Arc> arcs = new ArrayList<>();
         	Arc n_arc = Arc_precedent[data.getDestination().getId()];
