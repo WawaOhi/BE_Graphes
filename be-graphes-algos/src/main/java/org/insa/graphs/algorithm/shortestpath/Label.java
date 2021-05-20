@@ -50,16 +50,16 @@ public class Label implements Comparable<Label> {
 		this.cout = prix;
 	}
 	
-	public void setMark() {
-		this.marque = true;
+	public void setMark(boolean etat) {
+		this.marque = etat;
 	}
 	
 	public void setFather(Node geniteur) {
 		this.pere = geniteur;
 	}
 	
-	public void setState() {
-		this.dans_tas=true;
+	public void setState(boolean etat) {
+		this.dans_tas=etat;
 	}
 
 	//méthode necesaire à a creation de BinaryHeap contenant des labels.
@@ -68,11 +68,11 @@ public class Label implements Comparable<Label> {
 	public int compareTo(Label autre) {
 		// TODO Auto-generated method stub
 		int resultat;
-		if(this.getCost()<autre.getCost()) {
+		if(this.getTotalCost()<autre.getTotalCost()) {
 			resultat = -1;
 		}
 		
-		else if (this.getCost() == autre.getCost()) {
+		else if (this.getTotalCost() == autre.getTotalCost()) {
 			resultat = 0;
 		}
 		
@@ -81,5 +81,9 @@ public class Label implements Comparable<Label> {
 		}
 		return resultat;
 	}
-		
+	
+	//utilisé pour LabelStar
+	public float getTotalCost() {
+		return this.cout;
+	}
 }

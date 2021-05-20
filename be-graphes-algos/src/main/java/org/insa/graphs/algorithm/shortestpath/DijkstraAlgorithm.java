@@ -11,12 +11,9 @@ import org.insa.graphs.model.*;
 
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
-	protected int nbSommets;
-	protected int nbSommetsVus;
 
     public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
-        this.nbSommetsVus = 0;
     }
 
     @Override
@@ -42,11 +39,17 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         //On crée également un tableau qui va contenir les prédescesseurs du noeud considéré
         Arc[] Arc_precedent = new Arc[tailleGraph];
         
+        //cas ou nous avons un unique noeud et que nous souhaitons effectuer dijkstra sur celui-ci
+        if(data.getOrigin() == data.getDestination()) {
+        	solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, data.getOrigin()));
+        	return solution;
+        }
+        
         //On commence par ajouter le premier sommet 
-        Label premier = new Label(data.getOrigin());
+        Label premier = New_Lab(data.getOrigin());
         tabLabel[premier.getNode().getId()] = premier;
         tas.insert(premier);
-        premier.setState(); //permet de noter le label comme étant dans le tas 
+        premier.setState(false); //permet de noter le label comme étant dans le tas 
         premier.setCost(0); //on met le prix initialement à 0
         
         //On notifie que le premier élement à été introduit 
@@ -56,7 +59,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         while(!tas.isEmpty() && !fin) {
         	Label actuel = null;
         	actuel = tas.deleteMin();
-        	actuel.setMark();
+        	actuel.setState(false);
+        	actuel.setMark(true);
         	
         	//On notifie que le noeud que nous considérons à été marqué 
         	notifyNodeMarked(actuel.getNode());
@@ -86,9 +90,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         		if(Success_Lab == null) {
         			//on notifie que l'on viens d'arriver à un noeud qui n'avais pas été marqué 
         			notifyNodeReached(iterArc.getDestination());
-        			Success_Lab = new Label (successeur);
+        			Success_Lab = New_Lab (successeur);
         			tabLabel[Success_Lab.getNode().getId()] = Success_Lab;
-        			this.nbSommetsVus++;
         		}
         		
         		//On vérifie que c'est bien marqué 
@@ -105,7 +108,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         				}
         				//sinon on le met dans le tas
         				else {
-        					Success_Lab.setMark();
+        					Success_Lab.setState(true);
         				}
         				tas.insert(Success_Lab);
         				Arc_precedent[iterArc.getDestination().getId()] = iterArc;
@@ -141,6 +144,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	solution = new ShortestPathSolution(data, Status.OPTIMAL,new Path(graph,arcs));
         }
         return solution;
+    }
+    
+    protected Label New_Lab(Node noeud) {
+    	return new Label(noeud);
     }
 
 }
