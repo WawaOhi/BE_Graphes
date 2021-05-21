@@ -12,7 +12,7 @@ public class LabelStar extends Label {
 		super(noeud);
 		
 		if(data.getMode() == Mode.TIME) {
-			this.cout_estime = 3.6*(noeud.getPoint().distanceTo(data.getDestination().getPoint()))/Max_Speed;		
+			this.cout_estime = (noeud.getPoint().distanceTo(data.getDestination().getPoint()))/Max_Speed;		
 		}
 		else if(data.getMode() == Mode.LENGTH) {
 			this.cout_estime = noeud.getPoint().distanceTo(data.getDestination().getPoint());	

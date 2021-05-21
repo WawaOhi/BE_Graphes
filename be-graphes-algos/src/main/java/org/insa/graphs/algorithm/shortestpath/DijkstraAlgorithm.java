@@ -49,7 +49,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         Label premier = New_Lab(data.getOrigin());
         tabLabel[premier.getNode().getId()] = premier;
         tas.insert(premier);
-        premier.setState(false); //permet de noter le label comme étant dans le tas 
+        premier.setState(true); //permet de noter le label comme étant dans le tas 
         premier.setCost(0); //on met le prix initialement à 0
         
         //On notifie que le premier élement à été introduit 
